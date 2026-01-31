@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title>Elite Nutrition</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23000' width='100' height='100' rx='20'/><text x='50' y='65' font-size='50' text-anchor='middle'>🥗</text></svg>">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#000;--card:#1c1c1e;--card2:#2c2c2e;--text:#fff;--text2:#8e8e93;--accent:#ff6b35;--green:#30d158;--blue:#0a84ff;--red:#ff453a;--yellow:#ffd60a;--purple:#bf5af2;--safe-top:env(safe-area-inset-top,47px);--safe-bottom:env(safe-area-inset-bottom,34px)}
+html,body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;font-size:14px;line-height:1.4;min-height:100vh;overflow-x:hidden}
+.app{padding-top:calc(var(--safe-top) + 50px);padding-bottom:calc(80px + var(--safe-bottom));min-height:100vh}
+.header{position:fixed;top:0;left:0;right:0;background:rgba(0,0,0,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:calc(var(--safe-top) + 8px) 16px 8px;z-index:50;border-bottom:.5px solid rgba(255,255,255,.1)}
+.header h1{font-size:18px;font-weight:600}
+.tab-content{display:none;padding:12px}
+.tab-content.active{display:block}
+.card{background:var(--card);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.card-header{padding:12px 16px;font-weight:600;font-size:13px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px}
+.card-body{padding:16px}
+.alert{padding:12px 16px;margin:12px 0;border-radius:8px;border-left:3px solid}
+.alert-danger{background:rgba(255,69,58,.15);border-color:var(--red)}
+.alert-warning{background:rgba(255,214,10,.15);border-color:var(--yellow)}
+.alert-success{background:rgba(48,209,88,.15);border-color:var(--green)}
+.alert-info{background:rgba(10,132,255,.15);border-color:var(--blue)}
+.alert-title{font-weight:600;margin-bottom:4px}
+.alert-text{font-size:12px;color:var(--text2)}
+.rings{display:flex;justify-content:space-around;padding:20px 0}
+.ring{position:relative;width:80px;height:80px;display:flex;align-items:center;justify-content:center}
+.ring svg{position:absolute;top:0;left:0}
+.ring-text{text-align:center;z-index:1}
+.ring-val{font-size:18px;font-weight:700}
+.ring-lbl{font-size:9px;color:var(--text2)}
+.water-btns{display:flex;gap:8px;padding:0 16px 16px}
+.water-btn{flex:1;padding:10px;background:var(--card2);border:none;border-radius:8px;color:var(--blue);font-weight:600;font-size:13px}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:16px}
+.stat{background:var(--card2);border-radius:8px;padding:12px 8px;text-align:center}
+.stat-val{font-size:18px;font-weight:700}
+.stat-lbl{font-size:10px;color:var(--text2);margin-top:2px}
+.timeline{padding:0 16px 16px}
+.timeline-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--card2)}
+.timeline-item:last-child{border-bottom:none}
+.timeline-time{font-size:12px;color:var(--accent);font-weight:600;width:45px;flex-shrink:0}
+.timeline-phase{font-weight:600;font-size:13px}
+.timeline-items{font-size:12px;color:var(--text2);margin-top:2px}
+.search-box{display:flex;gap:8px;padding:0 12px;margin-bottom:12px}
+.search-input{flex:1;padding:12px 16px;background:var(--card);border:none;border-radius:10px;color:var(--text);font-size:16px}
+.search-input::placeholder{color:var(--text2)}
+.search-btn{padding:12px 20px;background:var(--accent);border:none;border-radius:10px;color:#fff;font-weight:600}
+.segment{display:flex;background:var(--card);border-radius:8px;padding:3px;margin:0 12px 12px}
+.segment-btn{flex:1;padding:8px;border:none;background:transparent;color:var(--text2);border-radius:6px;font-size:12px;font-weight:500}
+.segment-btn.active{background:var(--card2);color:var(--text)}
+.quick-btns{display:flex;gap:8px;padding:0 12px 12px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.quick-btns::-webkit-scrollbar{display:none}
+.quick-btn{padding:8px 14px;background:var(--card);border:none;border-radius:16px;color:var(--text);font-size:12px;white-space:nowrap}
+.product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 12px}
+.product-card{background:var(--card);border-radius:12px;overflow:hidden;cursor:pointer}
+.product-img{width:100%;height:120px;object-fit:cover;background:var(--card2)}
+.product-info{padding:10px}
+.product-badge{display:inline-block;padding:2px 6px;background:var(--accent);border-radius:4px;font-size:9px;font-weight:600;margin-bottom:4px}
+.product-badge.off{background:var(--blue)}
+.product-name{font-size:13px;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:36px}
+.product-brand{font-size:11px;color:var(--text2);margin:4px 0}
+.product-macros{font-size:10px;color:var(--text2)}
+.inv-list{padding:0 12px}
+.inv-item{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:12px;padding:12px;margin-bottom:8px}
+.inv-img{width:50px;height:50px;border-radius:8px;object-fit:cover;background:var(--card2)}
+.inv-info{flex:1;min-width:0}
+.inv-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.inv-macros{font-size:11px;color:var(--text2);margin-top:2px}
+.inv-amount{font-size:12px;color:var(--accent);margin-top:2px}
+.inv-actions{display:flex;gap:6px}
+.inv-btn{width:36px;height:36px;border:none;border-radius:8px;font-size:14px;display:flex;align-items:center;justify-content:center}
+.inv-btn.eat{background:var(--green);color:#fff}
+.inv-btn.del{background:var(--red);color:#fff}
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:12px;color:var(--text2);margin-bottom:6px}
+.form-input,.form-select,.form-textarea{width:100%;padding:12px;background:var(--card);border:none;border-radius:8px;color:var(--text);font-size:14px}
+.form-textarea{min-height:80px;resize:vertical}
+.form-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-secondary{background:var(--card2);color:var(--text)}
+.btn-small{padding:10px 16px;font-size:13px;width:auto}
+.workout-list{padding:0 12px}
+.workout-item{background:var(--card);border-radius:12px;padding:14px;margin-bottom:8px}
+.workout-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.workout-type{font-weight:600;font-size:14px}
+.workout-date{font-size:11px;color:var(--text2)}
+.workout-stats{display:flex;gap:16px;font-size:12px;color:var(--text2)}
+.workout-notes{font-size:12px;color:var(--text2);margin-top:8px;padding-top:8px;border-top:1px solid var(--card2)}
+.supp-list{padding:0 12px}
+.supp-item{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:10px;padding:14px;margin-bottom:8px}
+.supp-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--text2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.supp-check.checked{background:var(--green);border-color:var(--green)}
+.supp-check.checked::after{content:'✓';color:#fff;font-size:12px;font-weight:700}
+.supp-info{flex:1}
+.supp-name{font-weight:600;font-size:13px}
+.supp-detail{font-size:11px;color:var(--text2);margin-top:2px}
+.values-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 12px}
+.value-item{background:var(--card);border-radius:10px;padding:14px}
+.value-label{font-size:11px;color:var(--text2)}
+.value-num{font-size:20px;font-weight:700;margin:4px 0}
+.value-unit{font-size:11px;color:var(--text2)}
+.value-status{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:6px}
+.value-status.good{background:var(--green)}
+.value-status.warn{background:var(--yellow)}
+.value-status.bad{background:var(--red)}
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.8);z-index:200;align-items:flex-end}
+.modal.show{display:flex}
+.modal-content{background:var(--card);width:100%;max-height:85vh;border-radius:20px 20px 0 0;padding:20px;padding-bottom:calc(20px + var(--safe-bottom));overflow-y:auto}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.modal-title{font-size:18px;font-weight:600}
+.modal-close{width:30px;height:30px;border:none;background:var(--card2);border-radius:50%;color:var(--text);font-size:18px}
+.modal-img{width:100%;height:200px;object-fit:contain;background:var(--card2);border-radius:12px;margin-bottom:16px}
+.modal-macros{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.modal-macro{text-align:center;padding:12px;background:var(--card2);border-radius:8px}
+.modal-macro-val{font-size:18px;font-weight:700}
+.modal-macro-lbl{font-size:10px;color:var(--text2)}
+.modal-actions{display:flex;gap:10px;margin-top:16px}
+.modal-actions .btn{flex:1}
+.empty{text-align:center;padding:40px 20px;color:var(--text2)}
+.tab-bar{display:flex;background:rgba(28,28,30,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:.5px solid rgba(255,255,255,.1);padding:6px 0 calc(6px + var(--safe-bottom));position:fixed;bottom:0;left:0;right:0;z-index:100}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;border:none;background:transparent;color:var(--text2);font-size:10px}
+.tab.active{color:var(--accent)}
+.tab-icon{font-size:22px}
+.loading{display:flex;justify-content:center;padding:40px}
+.loading::after{content:'';width:30px;height:30px;border:3px solid var(--card2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.upload-area{border:2px dashed var(--card2);border-radius:12px;padding:30px 20px;text-align:center;cursor:pointer;margin:12px;transition:all .2s}
+.upload-area:hover,.upload-area.dragover{border-color:var(--accent);background:rgba(255,107,53,.1)}
+.upload-area input{display:none}
+.upload-icon{font-size:40px;margin-bottom:10px}
+.upload-text{font-size:13px;color:var(--text2)}
+.blood-table{width:100%;border-collapse:collapse;margin:12px 0}
+.blood-table th,.blood-table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--card2)}
+.blood-table th{font-size:11px;color:var(--text2);font-weight:500}
+.blood-table td{font-size:13px}
+.blood-table .val{font-weight:600}
+.blood-table .ref{font-size:11px;color:var(--text2)}
+.screenshot-preview{max-width:100%;border-radius:12px;margin:12px 0}
+.parsed-data{background:var(--card2);border-radius:8px;padding:12px;margin:12px 0;font-size:12px}
+.parsed-data pre{white-space:pre-wrap;word-break:break-all}
+</style>
+</head>
+<body>
+<div class="header"><h1>Elite Nutrition</h1></div>
+<div class="app">
+<!-- TAB 1: BUGÜN -->
+<div id="tab-today" class="tab-content active">
+<div id="alerts"></div>
+<div class="card">
+<div class="card-header">Günlük İlerleme</div>
+<div class="rings">
+<div class="ring">
+<svg width="80" height="80"><circle cx="40" cy="40" r="36" fill="none" stroke="var(--card2)" stroke-width="8"/><circle id="ring-cal" cx="40" cy="40" r="36" fill="none" stroke="var(--accent)" stroke-width="8" stroke-linecap="round" stroke-dasharray="226" stroke-dashoffset="226" style="transform:rotate(-90deg);transform-origin:center"/></svg>
+<div class="ring-text"><div class="ring-val" id="val-cal">0</div><div class="ring-lbl">/ 2000 kcal</div></div>
+</div>
+<div class="ring">
+<svg width="80" height="80"><circle cx="40" cy="40" r="36" fill="none" stroke="var(--card2)" stroke-width="8"/><circle id="ring-pro" cx="40" cy="40" r="36" fill="none" stroke="var(--green)" stroke-width="8" stroke-linecap="round" stroke-dasharray="226" stroke-dashoffset="226" style="transform:rotate(-90deg);transform-origin:center"/></svg>
+<div class="ring-text"><div class="ring-val" id="val-pro">0</div><div class="ring-lbl">/ 140g protein</div></div>
+</div>
+<div class="ring">
+<svg width="80" height="80"><circle cx="40" cy="40" r="36" fill="none" stroke="var(--card2)" stroke-width="8"/><circle id="ring-water" cx="40" cy="40" r="36" fill="none" stroke="var(--blue)" stroke-width="8" stroke-linecap="round" stroke-dasharray="226" stroke-dashoffset="226" style="transform:rotate(-90deg);transform-origin:center"/></svg>
+<div class="ring-text"><div class="ring-val" id="val-water">0</div><div class="ring-lbl">/ 4L su</div></div>
+</div>
+</div>
+<div class="water-btns">
+<button class="water-btn" onclick="addWater(300)">+300ml</button>
+<button class="water-btn" onclick="addWater(500)">+500ml</button>
+<button class="water-btn" onclick="addWater(1000)">+1L</button>
+</div>
+</div>
+<div class="card">
+<div class="card-header">Makrolar</div>
+<div class="stats-grid">
+<div class="stat"><div class="stat-val" id="val-carb">0</div><div class="stat-lbl">Karb (g)</div></div>
+<div class="stat"><div class="stat-val" id="val-fat">0</div><div class="stat-lbl">Yağ (g)</div></div>
+<div class="stat"><div class="stat-val" id="val-fiber">0</div><div class="stat-lbl">Lif (g)</div></div>
+<div class="stat"><div class="stat-val" id="val-workout">0</div><div class="stat-lbl">Yakılan</div></div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">Günlük Plan</div>
+<div class="timeline" id="meal-plan"></div>
+</div>
+</div>
+
+<!-- TAB 2: ARA -->
+<div id="tab-search" class="tab-content">
+<div class="search-box">
+<input type="text" class="search-input" id="search-input" placeholder="🔍 Ürün ara, barkod veya isim...">
+<button class="search-btn" onclick="searchProducts()">Ara</button>
+</div>
+<div class="segment">
+<button class="segment-btn active" onclick="setSource('all',this)">🔍 Tümü</button>
+<button class="segment-btn" onclick="setSource('off',this)">🌍 Global</button>
+</div>
+<div class="alert alert-info" style="margin:0 12px 12px">
+<div class="alert-title">ℹ️ Ürün Arama</div>
+<div class="alert-text">Open Food Facts veritabanından arama yapılır. Barkod (8-14 hane) veya ürün adı girin.</div>
+</div>
+<div class="quick-btns">
+<button class="quick-btn" onclick="quickSearch('yogurt')">Yoğurt</button>
+<button class="quick-btn" onclick="quickSearch('chicken breast')">Tavuk</button>
+<button class="quick-btn" onclick="quickSearch('tuna')">Ton</button>
+<button class="quick-btn" onclick="quickSearch('egg')">Yumurta</button>
+<button class="quick-btn" onclick="quickSearch('rice')">Pirinç</button>
+<button class="quick-btn" onclick="quickSearch('almond')">Badem</button>
+<button class="quick-btn" onclick="quickSearch('whey protein')">Whey</button>
+<button class="quick-btn" onclick="quickSearch('olive oil')">Zeytinyağı</button>
+</div>
+<div id="search-results" class="product-grid"></div>
+</div>
+
+<!-- TAB 3: DOLAP -->
+<div id="tab-inventory" class="tab-content">
+<div class="search-box">
+<input type="text" class="search-input" id="inv-filter" placeholder="🔍 Dolapta ara..." oninput="filterInventory()">
+</div>
+<div class="segment">
+<button class="segment-btn active" onclick="setInvCat('all',this)">Tümü</button>
+<button class="segment-btn" onclick="setInvCat('protein',this)">🥩 Protein</button>
+<button class="segment-btn" onclick="setInvCat('carb',this)">🍚 Karb</button>
+<button class="segment-btn" onclick="setInvCat('fat',this)">🥑 Yağ</button>
+</div>
+<div id="inv-list" class="inv-list"></div>
+<div style="padding:12px">
+<button class="btn btn-secondary" onclick="openManualAdd()">+ Manuel Ekle</button>
+</div>
+<div class="card" style="margin:12px">
+<div class="card-header">Dolap Toplamı</div>
+<div class="stats-grid" id="inv-totals">
+<div class="stat"><div class="stat-val" id="inv-cal">0</div><div class="stat-lbl">kcal</div></div>
+<div class="stat"><div class="stat-val" id="inv-pro">0</div><div class="stat-lbl">Protein</div></div>
+<div class="stat"><div class="stat-val" id="inv-carb">0</div><div class="stat-lbl">Karb</div></div>
+<div class="stat"><div class="stat-val" id="inv-fat">0</div><div class="stat-lbl">Yağ</div></div>
+</div>
+</div>
+</div>
+
+<!-- TAB 4: İDMAN -->
+<div id="tab-workout" class="tab-content">
+<div class="card" style="margin:0 12px">
+<div class="card-header">📸 Screenshot'tan Antrenman Ekle</div>
+<div class="upload-area" id="workout-upload" onclick="document.getElementById('workout-file').click()">
+<input type="file" id="workout-file" accept="image/*" onchange="handleWorkoutScreenshot(event)">
+<div class="upload-icon">📱</div>
+<div class="upload-text">Apple Fitness veya Strava screenshot'ı yükle<br><small>Verileri otomatik okuyacağım</small></div>
+</div>
+<div id="workout-screenshot-preview"></div>
+</div>
+
+<div class="card" style="margin:12px">
+<div class="card-header">Manuel Antrenman Ekle</div>
+<div class="card-body">
+<div class="form-group">
+<label class="form-label">Tip</label>
+<select class="form-select" id="w-type">
+<option value="strength">💪 Strength</option>
+<option value="hiit">🔥 HIIT</option>
+<option value="tennis">🎾 Tenis</option>
+<option value="kitesurf">🪁 Kitesurf</option>
+<option value="cycling">🚴 Bisiklet</option>
+<option value="cardio">🏃 Cardio</option>
+</select>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">Süre (dk)</label>
+<input type="number" class="form-input" id="w-duration" placeholder="45">
+</div>
+<div class="form-group">
+<label class="form-label">Kalori</label>
+<input type="number" class="form-input" id="w-calories" placeholder="320">
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">Ort HR</label>
+<input type="number" class="form-input" id="w-hr-avg" placeholder="135">
+</div>
+<div class="form-group">
+<label class="form-label">Max HR</label>
+<input type="number" class="form-input" id="w-hr-max" placeholder="168">
+</div>
+</div>
+<div class="form-group">
+<label class="form-label">Notlar</label>
+<textarea class="form-textarea" id="w-notes" placeholder="Egzersiz detayları..."></textarea>
+</div>
+<button class="btn btn-primary" onclick="saveWorkout()">Kaydet</button>
+</div>
+</div>
+<div class="card" style="margin:12px">
+<div class="card-header">Haftalık İstatistik</div>
+<div class="stats-grid" id="weekly-stats">
+<div class="stat"><div class="stat-val" id="ws-count">0</div><div class="stat-lbl">Antrenman</div></div>
+<div class="stat"><div class="stat-val" id="ws-mins">0</div><div class="stat-lbl">Dakika</div></div>
+<div class="stat"><div class="stat-val" id="ws-cal">0</div><div class="stat-lbl">Kalori</div></div>
+<div class="stat"><div class="stat-val" id="ws-hr">0</div><div class="stat-lbl">Ort HR</div></div>
+</div>
+</div>
+<div class="card" style="margin:0 12px">
+<div class="card-header">Geçmiş</div>
+</div>
+<div class="workout-list" id="workout-list"></div>
+</div>
+
+<!-- TAB 5: TAKVİYE -->
+<div id="tab-supplements" class="tab-content">
+<div class="alert alert-danger" style="margin:0 12px">
+<div class="alert-title">⛔ L-Arginine DURDURULDU</div>
+<div class="alert-text">Trigliserit 260 mg/dL → Yerine Citrulline Malate 6g</div>
+</div>
+<div class="card" style="margin:12px">
+<div class="card-header">Günlük Takviyeler</div>
+</div>
+<div class="supp-list" id="supp-list"></div>
+</div>
+
+<!-- TAB 6: DEĞERLER -->
+<div id="tab-values" class="tab-content">
+<div class="segment">
+<button class="segment-btn active" onclick="setValuesTab('body',this)">Vücut</button>
+<button class="segment-btn" onclick="setValuesTab('blood',this)">Kan</button>
+<button class="segment-btn" onclick="setValuesTab('upload',this)">📄 PDF Yükle</button>
+<button class="segment-btn" onclick="setValuesTab('goals',this)">Hedef</button>
+</div>
+<div id="values-body" class="values-tab">
+<div class="values-grid">
+<div class="value-item"><div class="value-label">Boy</div><div class="value-num">175<span class="value-unit">cm</span></div></div>
+<div class="value-item"><div class="value-label">Kilo</div><div class="value-num">81.9<span class="value-unit">kg</span></div></div>
+<div class="value-item"><div class="value-label">Yağ Oranı</div><div class="value-num">11.23<span class="value-unit">%</span></div></div>
+<div class="value-item"><div class="value-label">Kas Kütlesi</div><div class="value-num">69.1<span class="value-unit">kg</span></div></div>
+<div class="value-item"><div class="value-label">BMR</div><div class="value-num">2109<span class="value-unit">kcal</span></div></div>
+<div class="value-item"><div class="value-label">Yaş</div><div class="value-num">31<span class="value-unit">yıl</span></div></div>
+</div>
+</div>
+<div id="values-blood" class="values-tab" style="display:none">
+<div class="card" style="margin:0 12px 12px">
+<div class="card-header">📅 14 Ekim 2025 - e-Nabız Sonuçları</div>
+<table class="blood-table">
+<thead><tr><th>Test</th><th>Sonuç</th><th>Referans</th><th></th></tr></thead>
+<tbody id="blood-table-body"></tbody>
+</table>
+</div>
+</div>
+<div id="values-upload" class="values-tab" style="display:none">
+<div class="upload-area" id="pdf-upload" onclick="document.getElementById('pdf-file').click()">
+<input type="file" id="pdf-file" accept=".pdf,image/*" onchange="handlePDFUpload(event)">
+<div class="upload-icon">📄</div>
+<div class="upload-text">e-Nabız PDF veya tahlil fotoğrafı yükle<br><small>Değerler otomatik okunacak</small></div>
+</div>
+<div id="pdf-preview"></div>
+<div class="alert alert-info" style="margin:12px">
+<div class="alert-title">ℹ️ PDF Analizi Hakkında</div>
+<div class="alert-text">Bu bir client-side PWA olduğu için PDF parsing sınırlıdır. En iyi sonuç için e-Nabız'dan aldığınız PDF'i yükleyin veya değerleri manuel girin.</div>
+</div>
+</div>
+<div id="values-goals" class="values-tab" style="display:none;padding:0 12px">
+<div class="alert alert-warning"><div class="alert-title">🎯 Six-Pack Hedefi</div><div class="alert-text">Yağ oranı 11.23% → Hedef 8-10%</div></div>
+<div class="alert alert-danger"><div class="alert-title">🚨 Trigliserit Düşür</div><div class="alert-text">260 → &lt;150 mg/dL | Lif 40g/gün, omega-3 artır</div></div>
+<div class="alert alert-warning"><div class="alert-title">💛 HDL Yükselt</div><div class="alert-text">54 → ≥60 mg/dL | Egzersiz ve omega-3</div></div>
+<div class="alert alert-success"><div class="alert-title">✅ İnsülin Duyarlılığı</div><div class="alert-text">HOMA-IR 1.19 - Mükemmel! Korumaya devam</div></div>
+<div class="alert alert-warning"><div class="alert-title">⚠️ B12 Yüksek</div><div class="alert-text">978 ng/L (ref: 187-883) - Supplement dozunu azalt</div></div>
+<div class="alert alert-info"><div class="alert-title">🩸 Lenfosit Yüksek</div><div class="alert-text">LYM% 47.9% (ref: 20-40) - Doktorla görüş</div></div>
+</div>
+</div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+<button class="tab active" onclick="switchTab('today',this)"><span class="tab-icon">📊</span>Bugün</button>
+<button class="tab" onclick="switchTab('search',this)"><span class="tab-icon">🔍</span>Ara</button>
+<button class="tab" onclick="switchTab('inventory',this)"><span class="tab-icon">📦</span>Dolap</button>
+<button class="tab" onclick="switchTab('workout',this)"><span class="tab-icon">💪</span>İdman</button>
+<button class="tab" onclick="switchTab('supplements',this)"><span class="tab-icon">💊</span>Takviye</button>
+<button class="tab" onclick="switchTab('values',this)"><span class="tab-icon">📈</span>Değerler</button>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal" id="product-modal" onclick="if(event.target===this)closeModal()">
+<div class="modal-content">
+<div class="modal-header">
+<div class="modal-title" id="modal-title">Ürün</div>
+<button class="modal-close" onclick="closeModal()">×</button>
+</div>
+<img class="modal-img" id="modal-img" src="" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%231c1c1e%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2260%22 font-size=%2240%22 text-anchor=%22middle%22 fill=%22%238e8e93%22>🍽️</text></svg>'">
+<div id="modal-brand" style="font-size:12px;color:var(--text2);margin-bottom:8px"></div>
+<div class="modal-macros">
+<div class="modal-macro"><div class="modal-macro-val" id="modal-pro">0</div><div class="modal-macro-lbl">Protein</div></div>
+<div class="modal-macro"><div class="modal-macro-val" id="modal-carb">0</div><div class="modal-macro-lbl">Karb</div></div>
+<div class="modal-macro"><div class="modal-macro-val" id="modal-fat">0</div><div class="modal-macro-lbl">Yağ</div></div>
+<div class="modal-macro"><div class="modal-macro-val" id="modal-cal">0</div><div class="modal-macro-lbl">kcal</div></div>
+</div>
+<div style="font-size:11px;color:var(--text2);text-align:center;margin-bottom:12px">* 100g başına değerler</div>
+<div class="form-group">
+<label class="form-label">Miktar (gram)</label>
+<input type="number" class="form-input" id="modal-amount" value="100" oninput="updateModalCalc()">
+</div>
+<div id="modal-calc" style="background:var(--card2);padding:12px;border-radius:8px;margin-bottom:12px">
+<div style="font-size:12px;color:var(--text2);margin-bottom:4px">Hesaplanan değerler:</div>
+<div id="modal-calc-values" style="font-weight:600"></div>
+</div>
+<div class="modal-actions">
+<button class="btn btn-secondary" onclick="addToInventory()">📦 Dolaba Ekle</button>
+<button class="btn btn-primary" onclick="eatNow()">🍽️ Bugün Yedim</button>
+</div>
+</div>
+</div>
+
+<!-- MANUAL ADD MODAL -->
+<div class="modal" id="manual-modal" onclick="if(event.target===this)closeManualModal()">
+<div class="modal-content">
+<div class="modal-header">
+<div class="modal-title">Manuel Ekle</div>
+<button class="modal-close" onclick="closeManualModal()">×</button>
+</div>
+<div class="form-group">
+<label class="form-label">Ürün Adı</label>
+<input type="text" class="form-input" id="manual-name" placeholder="Ürün adı">
+</div>
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">Protein (g/100g)</label>
+<input type="number" class="form-input" id="manual-pro" placeholder="0">
+</div>
+<div class="form-group">
+<label class="form-label">Karb (g/100g)</label>
+<input type="number" class="form-input" id="manual-carb" placeholder="0">
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">Yağ (g/100g)</label>
+<input type="number" class="form-input" id="manual-fat" placeholder="0">
+</div>
+<div class="form-group">
+<label class="form-label">kcal (100g)</label>
+<input type="number" class="form-input" id="manual-cal" placeholder="0">
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">Lif (g/100g)</label>
+<input type="number" class="form-input" id="manual-fiber" placeholder="0">
+</div>
+<div class="form-group">
+<label class="form-label">Dolaba Eklenecek (g)</label>
+<input type="number" class="form-input" id="manual-amount" value="100">
+</div>
+</div>
+<button class="btn btn-primary" onclick="saveManual()">Kaydet</button>
+</div>
+</div>
+
+<script>
+// ========== BLOOD VALUES FROM PDF (14 October 2025) ==========
+const BLOOD = {
+  // Lipid Panel - KRITIK
+  ldl: 150,        // mg/dL | ref: <130 | ⚠️ HIGH
+  hdl: 54,         // mg/dL | ref: ≥40 | ⚠️ LOW (hedef ≥60)
+  trig: 260,       // mg/dL | ref: <150 | 🚨 CRITICAL
+  chol: 256,       // mg/dL | ref: <200 | ⚠️ HIGH
+
+  // Metabolik - MÜKEMMEL
+  homa: 1.19,      // ref: <2.5 | ✅
+  hba1c: 5.1,      // % | ref: 4-6 | ✅
+  glucose: 96,     // mg/dL | ref: 74-105 | ✅
+  insulin: 5,      // mU/L | ref: 2-25 | ✅
+  crp: 0.07,       // mg/dL | ref: <0.5 | ✅ EXCELLENT
+
+  // Tiroid
+  tsh: 1.79,       // mIU/L | ref: 0.35-4.94 | ✅
+  t4: 0.93,        // ng/dL | ref: 0.70-1.48 | ✅
+
+  // Demir
+  iron: 69,        // µg/dL | ref: 65-175 | ✅ (alt sınır)
+  ferritin: 221,   // µg/L | ref: 22-275 | ✅
+  tibc: 207,       // µg/dL | ref: 120-370 | ✅
+
+  // Elektrolitler
+  sodium: 136,     // mmol/L | ref: 135-147 | ✅
+  potassium: 4.3,  // mmol/L | ref: 3.5-5.1 | ✅
+  chloride: 105,   // mmol/L | ref: 98-112 | ✅
+  calcium: 8.5,    // mg/dL | ref: 8.4-10.2 | ✅
+  magnesium: 1.8,  // mg/dL | ref: 1.6-2.6 | ✅
+
+  // Karaciğer
+  alt: 22,         // U/L | ref: 0-45 | ✅
+  ast: 21,         // U/L | ref: 11-34 | ✅
+  ggt: 20,         // U/L | ref: 0-55 | ✅
+  alp: 41,         // U/L | ref: 50-116 | ⚠️ LOW
+
+  // Böbrek
+  creatinine: 0.9, // mg/dL | ref: 0.6-1.3 | ✅
+  urea: 17,        // mg/dL | ref: 8.9-20.6 | ✅
+  uricAcid: 5.2,   // mg/dL | ref: 3.7-7.7 | ✅
+
+  // Vitaminler & Diğer
+  b12: 978,        // ng/L | ref: 187-883 | ⚠️ HIGH
+
+  // Hemogram
+  wbc: 6.97,       // 10E3/mm3 | ref: 4-10 | ✅
+  rbc: 4.99,       // 10E6/mm3 | ref: 4-5.5 | ✅
+  hgb: 14.5,       // g/dL | ref: 12-16 | ✅
+  hct: 42.9,       // % | ref: 40-54 | ✅
+  plt: 216,        // Bin/mm3 | ref: 100-400 | ✅
+  lymphPct: 47.9,  // % | ref: 20-40 | ⚠️ HIGH
+  neutPct: 40.2,   // % | ref: 50-70 | ⚠️ LOW
+  eosPct: 6.6      // % | ref: 0.5-5 | ⚠️ HIGH
+};
+
+const BLOOD_DISPLAY = [
+  { name: 'LDL Kolesterol', val: BLOOD.ldl, unit: 'mg/dL', ref: '<130', status: BLOOD.ldl > 130 ? 'bad' : 'good' },
+  { name: 'HDL Kolesterol', val: BLOOD.hdl, unit: 'mg/dL', ref: '≥60', status: BLOOD.hdl < 60 ? 'warn' : 'good' },
+  { name: 'Trigliserit', val: BLOOD.trig, unit: 'mg/dL', ref: '<150', status: BLOOD.trig > 150 ? 'bad' : 'good' },
+  { name: 'Kolesterol', val: BLOOD.chol, unit: 'mg/dL', ref: '<200', status: BLOOD.chol > 200 ? 'bad' : 'good' },
+  { name: 'HOMA-IR', val: BLOOD.homa, unit: '', ref: '<2.5', status: 'good' },
+  { name: 'HbA1c', val: BLOOD.hba1c, unit: '%', ref: '4-6', status: 'good' },
+  { name: 'Glukoz', val: BLOOD.glucose, unit: 'mg/dL', ref: '74-105', status: 'good' },
+  { name: 'İnsülin', val: BLOOD.insulin, unit: 'mU/L', ref: '2-25', status: 'good' },
+  { name: 'CRP', val: BLOOD.crp, unit: 'mg/dL', ref: '<0.5', status: 'good' },
+  { name: 'TSH', val: BLOOD.tsh, unit: 'mIU/L', ref: '0.35-4.94', status: 'good' },
+  { name: 'Serbest T4', val: BLOOD.t4, unit: 'ng/dL', ref: '0.70-1.48', status: 'good' },
+  { name: 'Demir', val: BLOOD.iron, unit: 'µg/dL', ref: '65-175', status: BLOOD.iron < 70 ? 'warn' : 'good' },
+  { name: 'Ferritin', val: BLOOD.ferritin, unit: 'µg/L', ref: '22-275', status: 'good' },
+  { name: 'B12', val: BLOOD.b12, unit: 'ng/L', ref: '187-883', status: BLOOD.b12 > 883 ? 'warn' : 'good' },
+  { name: 'Sodyum', val: BLOOD.sodium, unit: 'mmol/L', ref: '135-147', status: 'good' },
+  { name: 'Potasyum', val: BLOOD.potassium, unit: 'mmol/L', ref: '3.5-5.1', status: 'good' },
+  { name: 'Kalsiyum', val: BLOOD.calcium, unit: 'mg/dL', ref: '8.4-10.2', status: 'good' },
+  { name: 'Magnezyum', val: BLOOD.magnesium, unit: 'mg/dL', ref: '1.6-2.6', status: 'good' },
+  { name: 'ALT', val: BLOOD.alt, unit: 'U/L', ref: '0-45', status: 'good' },
+  { name: 'AST', val: BLOOD.ast, unit: 'U/L', ref: '11-34', status: 'good' },
+  { name: 'Kreatinin', val: BLOOD.creatinine, unit: 'mg/dL', ref: '0.6-1.3', status: 'good' },
+  { name: 'Hemoglobin', val: BLOOD.hgb, unit: 'g/dL', ref: '12-16', status: 'good' },
+  { name: 'Hematokrit', val: BLOOD.hct, unit: '%', ref: '40-54', status: 'good' },
+  { name: 'Lenfosit %', val: BLOOD.lymphPct, unit: '%', ref: '20-40', status: BLOOD.lymphPct > 40 ? 'warn' : 'good' },
+  { name: 'Nötrofil %', val: BLOOD.neutPct, unit: '%', ref: '50-70', status: BLOOD.neutPct < 50 ? 'warn' : 'good' },
+  { name: 'Eozinofil %', val: BLOOD.eosPct, unit: '%', ref: '0.5-5', status: BLOOD.eosPct > 5 ? 'warn' : 'good' }
+];
+
+const SUPPLEMENTS = [
+  { name: 'Citrulline Malate', dose: '6g', timing: 'Pre-workout 30dk', key: 'citru' },
+  { name: 'BCAA Pro 4:1:1', dose: '6g', timing: 'Pre/Intra', key: 'bcaa' },
+  { name: 'Whey Isolate', dose: '25g', timing: 'Post 15dk', key: 'whey' },
+  { name: 'L-Glutamine', dose: '5g', timing: 'Post-workout', key: 'glut1' },
+  { name: 'Omega-3 Krill', dose: '750mg', timing: 'Ana öğün', key: 'omega' },
+  { name: 'D3K2', dose: '1000IU', timing: 'Sabah yağlı', key: 'd3k2' },
+  { name: 'Chromium', dose: '200mcg', timing: 'Karb öğünü', key: 'chrom' },
+  { name: 'Ginkgo Biloba', dose: '160mg', timing: 'Sabah', key: 'ginkgo' },
+  { name: 'B12 Plus', dose: '1000mcg', timing: 'Sabah (AZALT!)', key: 'b12' },
+  { name: 'L-Glutamine', dose: '5g', timing: 'Gece', key: 'glut2' }
+];
+
+const TARGETS = { calories: 2000, protein: 140, carbs: 150, fat: 65, fiber: 40, water: 4000 };
+
+// ========== UTILITY ==========
+const DB = {
+  get: (k, d = null) => { try { return JSON.parse(localStorage.getItem(k)) || d } catch { return d } },
+  set: (k, v) => localStorage.setItem(k, JSON.stringify(v)),
+  today: () => new Date().toISOString().split('T')[0]
+};
+
+let currentSource = 'all';
+let currentInvCat = 'all';
+let selectedProduct = null;
+
+// ========== TABS ==========
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  btn.classList.add('active');
+  if (tab === 'today') loadToday();
+  if (tab === 'inventory') loadInventory();
+  if (tab === 'workout') loadWorkouts();
+  if (tab === 'supplements') loadSupplements();
+  if (tab === 'values') loadBloodTable();
+}
+
+// ========== TODAY TAB ==========
+function loadToday() {
+  loadAlerts();
+  loadDailyProgress();
+  loadMealPlan();
+}
+
+function loadAlerts() {
+  const alerts = [];
+  if (BLOOD.trig > 150) alerts.push({ type: 'danger', title: '🚨 Trigliserit ' + BLOOD.trig, text: 'L-Arginine durduruldu, omega-3 ve lif artır' });
+  if (BLOOD.ldl > 130) alerts.push({ type: 'warning', title: '⚠️ LDL ' + BLOOD.ldl, text: 'Lif 40g/gün hedefle, zeytinyağı artır' });
+  if (BLOOD.hdl < 60) alerts.push({ type: 'warning', title: '💛 HDL ' + BLOOD.hdl, text: 'Omega-3 ve egzersiz artır' });
+  if (BLOOD.b12 > 883) alerts.push({ type: 'warning', title: '⚠️ B12 Yüksek ' + BLOOD.b12, text: 'B12 supplement dozunu azalt' });
+  if (BLOOD.homa < 2.5) alerts.push({ type: 'success', title: '✅ İnsülin Duyarlılığı', text: 'HOMA-IR ' + BLOOD.homa + ' - Mükemmel!' });
+  document.getElementById('alerts').innerHTML = alerts.map(a => `<div class="alert alert-${a.type}"><div class="alert-title">${a.title}</div><div class="alert-text">${a.text}</div></div>`).join('');
+}
+
+function loadDailyProgress() {
+  const d = DB.get('daily_' + DB.today(), { cal: 0, protein: 0, carb: 0, fat: 0, fiber: 0, water: 0 });
+  const calPct = Math.min(d.cal / TARGETS.calories, 1);
+  const proPct = Math.min(d.protein / TARGETS.protein, 1);
+  const waterPct = Math.min(d.water / TARGETS.water, 1);
+  document.getElementById('ring-cal').style.strokeDashoffset = 226 - (226 * calPct);
+  document.getElementById('ring-pro').style.strokeDashoffset = 226 - (226 * proPct);
+  document.getElementById('ring-water').style.strokeDashoffset = 226 - (226 * waterPct);
+  document.getElementById('val-cal').textContent = Math.round(d.cal);
+  document.getElementById('val-pro').textContent = Math.round(d.protein);
+  document.getElementById('val-water').textContent = (d.water / 1000).toFixed(1) + 'L';
+  document.getElementById('val-carb').textContent = Math.round(d.carb);
+  document.getElementById('val-fat').textContent = Math.round(d.fat);
+  document.getElementById('val-fiber').textContent = Math.round(d.fiber);
+  const workouts = DB.get('workouts', []).filter(w => w.date === DB.today());
+  const burned = workouts.reduce((s, w) => s + (w.calories || 0), 0);
+  document.getElementById('val-workout').textContent = burned;
+}
+
+function addWater(ml) {
+  const d = DB.get('daily_' + DB.today(), { cal: 0, protein: 0, carb: 0, fat: 0, fiber: 0, water: 0 });
+  d.water = (d.water || 0) + ml;
+  DB.set('daily_' + DB.today(), d);
+  loadDailyProgress();
+}
+
+function loadMealPlan() {
+  const inv = DB.get('inventory', []);
+  const proteins = inv.filter(i => i.cat === 'protein');
+  const carbs = inv.filter(i => i.cat === 'carb');
+  const p1 = proteins[0] || { name: '(protein ekle)' };
+  const p2 = proteins[1] || p1;
+  const c1 = carbs[0] || { name: '(karb ekle)' };
+  const plan = [
+    { time: '08:00', phase: 'Uyanış', items: '500ml su + kahve + 2 hurma' },
+    { time: '09:30', phase: 'Pre-Workout', items: 'Citrulline 6g + BCAA 6g' },
+    { time: '10:00', phase: 'İdman', items: '300ml su / 15dk' },
+    { time: '10:45', phase: 'Post ⚡', items: 'Whey 25g + Glutamine 5g' },
+    { time: '11:30', phase: 'Ana Öğün 🏆', items: p1.name.split(' ').slice(0, 3).join(' ') + ' 150g • ' + c1.name.split(' ').slice(0, 2).join(' ') + ' 80g' },
+    { time: '15:00', phase: 'Snack', items: 'Yeşil çay + 15g badem' },
+    { time: '19:00', phase: 'Akşam', items: p2.name.split(' ').slice(0, 3).join(' ') + ' 100g • Mercimek 60g • Yoğurt 150g' },
+    { time: '22:30', phase: 'Gece', items: 'Glutamine 5g' }
+  ];
+  document.getElementById('meal-plan').innerHTML = plan.map(m => `<div class="timeline-item"><div class="timeline-time">${m.time}</div><div><div class="timeline-phase">${m.phase}</div><div class="timeline-items">${m.items}</div></div></div>`).join('');
+}
+
+// ========== SEARCH TAB ==========
+function setSource(src, btn) {
+  currentSource = src;
+  document.querySelectorAll('#tab-search .segment-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function quickSearch(q) {
+  document.getElementById('search-input').value = q;
+  searchProducts();
+}
+
+async function searchProducts() {
+  const q = document.getElementById('search-input').value.trim();
+  if (!q) return;
+  const container = document.getElementById('search-results');
+  container.innerHTML = '<div class="loading"></div>';
+  let products = [];
+
+  try {
+    // Barcode search
+    if (/^\d{8,14}$/.test(q)) {
+      const res = await fetch(`https://world.openfoodfacts.org/api/v0/product/${q}.json`);
+      const data = await res.json();
+      if (data.product) products.push({ ...parseOFF(data.product), source: 'off' });
+    } else {
+      // Text search
+      const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process&json=1&page_size=20`;
+      const res = await fetch(url);
+      const data = await res.json();
+      products = (data.products || []).map(p => ({ ...parseOFF(p), source: 'off' })).filter(p => p.kcal > 0 || p.protein > 0);
+    }
+  } catch (e) {
+    console.error('Search failed:', e);
+    container.innerHTML = '<div class="empty">Arama başarısız. İnternet bağlantınızı kontrol edin.</div>';
+    return;
+  }
+
+  if (!products.length) {
+    container.innerHTML = '<div class="empty">Sonuç bulunamadı<br><br>Farklı kelimeler deneyin veya barkod girin</div>';
+    return;
+  }
+
+  container.innerHTML = products.map(p => `<div class="product-card" onclick='openProduct(${JSON.stringify(p).replace(/'/g, "&#39;")})'>
+    <img class="product-img" src="${p.img || ''}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%231c1c1e%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2260%22 font-size=%2240%22 text-anchor=%22middle%22 fill=%22%238e8e93%22>🍽️</text></svg>'">
+    <div class="product-info">
+      <span class="product-badge off">Open Food Facts</span>
+      <div class="product-name">${p.name}</div>
+      <div class="product-brand">${p.brand || ''}</div>
+      <div class="product-macros">P:${p.protein}g C:${p.carb}g F:${p.fat}g ${p.kcal}kcal</div>
+    </div>
+  </div>`).join('');
+}
+
+function parseOFF(p) {
+  const n = p.nutriments || {};
+  return {
+    id: p.code || p._id || 'off-' + Date.now(),
+    name: p.product_name_tr || p.product_name || 'Bilinmeyen',
+    brand: p.brands || '',
+    img: p.image_url || p.image_front_url || '',
+    protein: Math.round(n.proteins_100g || 0),
+    carb: Math.round(n.carbohydrates_100g || 0),
+    fat: Math.round(n.fat_100g || 0),
+    kcal: Math.round(n['energy-kcal_100g'] || n.energy_100g / 4.184 || 0),
+    fiber: Math.round(n.fiber_100g || 0),
+    quantity: p.quantity || '',
+    cat: (n.proteins_100g || 0) > 15 ? 'protein' : (n.fat_100g || 0) > 20 ? 'fat' : 'carb',
+    tags: []
+  };
+}
+
+document.getElementById('search-input').addEventListener('keypress', e => { if (e.key === 'Enter') searchProducts() });
+
+// ========== PRODUCT MODAL ==========
+function openProduct(p) {
+  selectedProduct = p;
+  document.getElementById('modal-title').textContent = p.name;
+  document.getElementById('modal-img').src = p.img || '';
+  document.getElementById('modal-brand').textContent = p.brand ? `Marka: ${p.brand}` : '';
+  document.getElementById('modal-pro').textContent = p.protein + 'g';
+  document.getElementById('modal-carb').textContent = p.carb + 'g';
+  document.getElementById('modal-fat').textContent = p.fat + 'g';
+  document.getElementById('modal-cal').textContent = p.kcal;
+
+  // Try to extract weight from quantity
+  let defaultAmount = 100;
+  if (p.quantity) {
+    const match = p.quantity.match(/(\d+)\s*(g|gr|gram)/i);
+    if (match) defaultAmount = parseInt(match[1]);
+  }
+  document.getElementById('modal-amount').value = defaultAmount;
+  updateModalCalc();
+  document.getElementById('product-modal').classList.add('show');
+}
+
+function updateModalCalc() {
+  if (!selectedProduct) return;
+  const amount = parseInt(document.getElementById('modal-amount').value) || 100;
+  const mult = amount / 100;
+  const calc = {
+    cal: Math.round(selectedProduct.kcal * mult),
+    pro: Math.round(selectedProduct.protein * mult),
+    carb: Math.round(selectedProduct.carb * mult),
+    fat: Math.round(selectedProduct.fat * mult)
+  };
+  document.getElementById('modal-calc-values').textContent = `${calc.cal} kcal | P: ${calc.pro}g | C: ${calc.carb}g | F: ${calc.fat}g`;
+}
+
+function closeModal() {
+  document.getElementById('product-modal').classList.remove('show');
+  selectedProduct = null;
+}
+
+function addToInventory() {
+  if (!selectedProduct) return;
+  const amount = parseInt(document.getElementById('modal-amount').value) || 100;
+  const inv = DB.get('inventory', []);
+  const existing = inv.findIndex(i => i.id === selectedProduct.id);
+  if (existing >= 0) {
+    inv[existing].amount += amount;
+  } else {
+    inv.push({ ...selectedProduct, amount, addedAt: Date.now() });
+  }
+  DB.set('inventory', inv);
+  closeModal();
+  alert(`${amount}g dolaba eklendi!`);
+}
+
+function eatNow() {
+  if (!selectedProduct) return;
+  const amount = parseInt(document.getElementById('modal-amount').value) || 100;
+  const mult = amount / 100;
+  const d = DB.get('daily_' + DB.today(), { cal: 0, protein: 0, carb: 0, fat: 0, fiber: 0, water: 0 });
+  d.cal += (selectedProduct.kcal || 0) * mult;
+  d.protein += (selectedProduct.protein || 0) * mult;
+  d.carb += (selectedProduct.carb || 0) * mult;
+  d.fat += (selectedProduct.fat || 0) * mult;
+  d.fiber += (selectedProduct.fiber || 0) * mult;
+  DB.set('daily_' + DB.today(), d);
+  closeModal();
+  alert('Kaydedildi!');
+  loadDailyProgress();
+}
+
+// ========== INVENTORY TAB ==========
+function setInvCat(cat, btn) {
+  currentInvCat = cat;
+  document.querySelectorAll('#tab-inventory .segment-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadInventory();
+}
+
+function filterInventory() {
+  loadInventory();
+}
+
+function loadInventory() {
+  const filter = document.getElementById('inv-filter').value.toLowerCase();
+  let inv = DB.get('inventory', []);
+  if (currentInvCat !== 'all') inv = inv.filter(i => i.cat === currentInvCat);
+  if (filter) inv = inv.filter(i => i.name.toLowerCase().includes(filter));
+  const container = document.getElementById('inv-list');
+  if (!inv.length) {
+    container.innerHTML = '<div class="empty">Dolap boş<br><br>Ara sekmesinden ürün ekle</div>';
+    updateInvTotals([]);
+    return;
+  }
+  container.innerHTML = inv.map((p, idx) => {
+    const mult = p.amount / 100;
+    return `<div class="inv-item">
+      <img class="inv-img" src="${p.img || ''}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%231c1c1e%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2260%22 font-size=%2240%22 text-anchor=%22middle%22 fill=%22%238e8e93%22>🍽️</text></svg>'">
+      <div class="inv-info">
+        <div class="inv-name">${p.name}</div>
+        <div class="inv-macros">P:${Math.round(p.protein * mult)}g C:${Math.round(p.carb * mult)}g F:${Math.round(p.fat * mult)}g ${Math.round(p.kcal * mult)}kcal</div>
+        <div class="inv-amount">${p.amount}g</div>
+      </div>
+      <div class="inv-actions">
+        <button class="inv-btn eat" onclick="eatFromInv(${idx})">🍽️</button>
+        <button class="inv-btn del" onclick="deleteFromInv(${idx})">×</button>
+      </div>
+    </div>`;
+  }).join('');
+  updateInvTotals(inv);
+}
+
+function updateInvTotals(inv) {
+  let cal = 0, pro = 0, carb = 0, fat = 0;
+  inv.forEach(p => {
+    const m = p.amount / 100;
+    cal += p.kcal * m; pro += p.protein * m; carb += p.carb * m; fat += p.fat * m;
+  });
+  document.getElementById('inv-cal').textContent = Math.round(cal);
+  document.getElementById('inv-pro').textContent = Math.round(pro);
+  document.getElementById('inv-carb').textContent = Math.round(carb);
+  document.getElementById('inv-fat').textContent = Math.round(fat);
+}
+
+function eatFromInv(idx) {
+  const inv = DB.get('inventory', []);
+  const p = inv[idx];
+  if (!p) return;
+  const amount = prompt('Ne kadar yedin? (gram)', Math.min(p.amount, 100));
+  if (!amount) return;
+  const grams = parseInt(amount) || 0;
+  if (grams <= 0) return;
+  const mult = grams / 100;
+  const d = DB.get('daily_' + DB.today(), { cal: 0, protein: 0, carb: 0, fat: 0, fiber: 0, water: 0 });
+  d.cal += (p.kcal || 0) * mult;
+  d.protein += (p.protein || 0) * mult;
+  d.carb += (p.carb || 0) * mult;
+  d.fat += (p.fat || 0) * mult;
+  d.fiber += (p.fiber || 0) * mult;
+  DB.set('daily_' + DB.today(), d);
+  p.amount -= grams;
+  if (p.amount <= 0) inv.splice(idx, 1);
+  DB.set('inventory', inv);
+  loadInventory();
+  loadDailyProgress();
+}
+
+function deleteFromInv(idx) {
+  if (!confirm('Silmek istediğine emin misin?')) return;
+  const inv = DB.get('inventory', []);
+  inv.splice(idx, 1);
+  DB.set('inventory', inv);
+  loadInventory();
+}
+
+// ========== MANUAL ADD ==========
+function openManualAdd() {
+  document.getElementById('manual-modal').classList.add('show');
+}
+
+function closeManualModal() {
+  document.getElementById('manual-modal').classList.remove('show');
+}
+
+function saveManual() {
+  const name = document.getElementById('manual-name').value.trim();
+  if (!name) { alert('Ürün adı gerekli'); return }
+  const p = {
+    id: 'manual-' + Date.now(),
+    name,
+    brand: 'Manuel',
+    protein: parseFloat(document.getElementById('manual-pro').value) || 0,
+    carb: parseFloat(document.getElementById('manual-carb').value) || 0,
+    fat: parseFloat(document.getElementById('manual-fat').value) || 0,
+    kcal: parseFloat(document.getElementById('manual-cal').value) || 0,
+    fiber: parseFloat(document.getElementById('manual-fiber').value) || 0,
+    amount: parseInt(document.getElementById('manual-amount').value) || 100,
+    img: '',
+    cat: 'protein',
+    tags: [],
+    addedAt: Date.now()
+  };
+  const inv = DB.get('inventory', []);
+  inv.push(p);
+  DB.set('inventory', inv);
+  closeManualModal();
+  loadInventory();
+  // Reset form
+  ['manual-name', 'manual-pro', 'manual-carb', 'manual-fat', 'manual-cal', 'manual-fiber'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('manual-amount').value = '100';
+}
+
+// ========== WORKOUT TAB ==========
+function saveWorkout() {
+  const type = document.getElementById('w-type').value;
+  const duration = parseInt(document.getElementById('w-duration').value) || 0;
+  const calories = parseInt(document.getElementById('w-calories').value) || 0;
+  const hrAvg = parseInt(document.getElementById('w-hr-avg').value) || 0;
+  const hrMax = parseInt(document.getElementById('w-hr-max').value) || 0;
+  const notes = document.getElementById('w-notes').value.trim();
+  if (!duration) { alert('Süre gerekli'); return }
+  const workouts = DB.get('workouts', []);
+  workouts.unshift({ id: Date.now(), date: DB.today(), type, duration, calories, hrAvg, hrMax, notes });
+  DB.set('workouts', workouts);
+  document.getElementById('w-duration').value = '';
+  document.getElementById('w-calories').value = '';
+  document.getElementById('w-hr-avg').value = '';
+  document.getElementById('w-hr-max').value = '';
+  document.getElementById('w-notes').value = '';
+  loadWorkouts();
+  loadDailyProgress();
+}
+
+function loadWorkouts() {
+  const workouts = DB.get('workouts', []);
+  const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
+  const weekStr = weekAgo.toISOString().split('T')[0];
+  const weekly = workouts.filter(w => w.date >= weekStr);
+  document.getElementById('ws-count').textContent = weekly.length;
+  document.getElementById('ws-mins').textContent = weekly.reduce((s, w) => s + w.duration, 0);
+  document.getElementById('ws-cal').textContent = weekly.reduce((s, w) => s + w.calories, 0);
+  const avgHr = weekly.length ? Math.round(weekly.reduce((s, w) => s + w.hrAvg, 0) / weekly.length) : 0;
+  document.getElementById('ws-hr').textContent = avgHr;
+  const typeIcons = { strength: '💪', hiit: '🔥', tennis: '🎾', kitesurf: '🪁', cycling: '🚴', cardio: '🏃' };
+  document.getElementById('workout-list').innerHTML = workouts.slice(0, 10).map(w => `<div class="workout-item">
+    <div class="workout-header">
+      <div class="workout-type">${typeIcons[w.type] || '🏋️'} ${w.type}</div>
+      <div class="workout-date">${w.date}</div>
+    </div>
+    <div class="workout-stats">
+      <span>${w.duration} dk</span>
+      <span>${w.calories} kcal</span>
+      ${w.hrAvg ? `<span>❤️ ${w.hrAvg}/${w.hrMax}</span>` : ''}
+    </div>
+    ${w.notes ? `<div class="workout-notes">${w.notes}</div>` : ''}
+  </div>`).join('');
+}
+
+function handleWorkoutScreenshot(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const preview = document.getElementById('workout-screenshot-preview');
+    preview.innerHTML = `
+      <img src="${e.target.result}" class="screenshot-preview" style="max-width:100%;border-radius:12px;margin:12px">
+      <div class="alert alert-info" style="margin:12px">
+        <div class="alert-title">📸 Screenshot Yüklendi</div>
+        <div class="alert-text">Bu bir client-side PWA olduğu için görsel analiz yapılamıyor. Lütfen değerleri yukarıdaki formdan manuel girin.<br><br>
+        <strong>İpucu:</strong> Screenshot'taki değerleri okuyup forma girin.</div>
+      </div>
+    `;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ========== SUPPLEMENTS TAB ==========
+function loadSupplements() {
+  const checked = DB.get('supps_' + DB.today(), []);
+  document.getElementById('supp-list').innerHTML = SUPPLEMENTS.map(s => `<div class="supp-item" onclick="toggleSupp('${s.key}')">
+    <div class="supp-check ${checked.includes(s.key) ? 'checked' : ''}"></div>
+    <div class="supp-info">
+      <div class="supp-name">${s.name} ${s.dose}</div>
+      <div class="supp-detail">${s.timing}</div>
+    </div>
+  </div>`).join('');
+}
+
+function toggleSupp(key) {
+  let checked = DB.get('supps_' + DB.today(), []);
+  if (checked.includes(key)) checked = checked.filter(k => k !== key);
+  else checked.push(key);
+  DB.set('supps_' + DB.today(), checked);
+  loadSupplements();
+}
+
+// ========== VALUES TAB ==========
+function setValuesTab(tab, btn) {
+  document.querySelectorAll('#tab-values .segment-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('values-body').style.display = tab === 'body' ? 'block' : 'none';
+  document.getElementById('values-blood').style.display = tab === 'blood' ? 'block' : 'none';
+  document.getElementById('values-upload').style.display = tab === 'upload' ? 'block' : 'none';
+  document.getElementById('values-goals').style.display = tab === 'goals' ? 'block' : 'none';
+  if (tab === 'blood') loadBloodTable();
+}
+
+function loadBloodTable() {
+  const tbody = document.getElementById('blood-table-body');
+  tbody.innerHTML = BLOOD_DISPLAY.map(b => `<tr>
+    <td>${b.name}</td>
+    <td class="val">${b.val} ${b.unit}</td>
+    <td class="ref">${b.ref}</td>
+    <td><span class="value-status ${b.status}"></span></td>
+  </tr>`).join('');
+}
+
+function handlePDFUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const preview = document.getElementById('pdf-preview');
+
+  if (file.type === 'application/pdf') {
+    preview.innerHTML = `
+      <div class="alert alert-warning" style="margin:12px">
+        <div class="alert-title">📄 PDF Yüklendi: ${file.name}</div>
+        <div class="alert-text">Client-side PDF parsing sınırlıdır. Şu an için:<br>
+        1. PDF'i açıp değerleri not alın<br>
+        2. Değerler sekmesinde manuel güncelleyin<br><br>
+        <strong>Not:</strong> Gelecek versiyonda PDF.js entegrasyonu eklenecek.</div>
+      </div>
+    `;
+  } else {
+    // Image file
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      preview.innerHTML = `
+        <img src="${e.target.result}" class="screenshot-preview" style="max-width:100%;border-radius:12px;margin:12px">
+        <div class="alert alert-info" style="margin:12px">
+          <div class="alert-title">📸 Görsel Yüklendi</div>
+          <div class="alert-text">Görsel analizi için backend gerekli. Şimdilik değerleri manuel girin.</div>
+        </div>
+      `;
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+// Drag & drop for upload areas
+['pdf-upload', 'workout-upload'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('dragover'); });
+  el.addEventListener('dragleave', () => el.classList.remove('dragover'));
+  el.addEventListener('drop', e => {
+    e.preventDefault();
+    el.classList.remove('dragover');
+    const input = el.querySelector('input[type="file"]');
+    if (input && e.dataTransfer.files.length) {
+      input.files = e.dataTransfer.files;
+      input.dispatchEvent(new Event('change'));
+    }
+  });
+});
+
+// ========== INIT ==========
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(e => console.log('SW registration failed:', e));
+}
+loadToday();
+loadBloodTable();
+</script>
+</body>
+</html>
